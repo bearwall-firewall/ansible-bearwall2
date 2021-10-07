@@ -13,3 +13,6 @@ bearwall2_options:
 bearwall2_enable_backports: false
 bearwall2_backport_kernel_nftables: false
 bearwall2_dry_run: false
+
+debian_mirror: "https://deb.debian.org/debian/"
+debian_backports_components: "{{ ansible_distribution_release }}-backports main contrib non-free"
