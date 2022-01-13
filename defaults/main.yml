@@ -6,7 +6,7 @@ bearwall2_interfaces: []
 bearwall2_options:
   logging: "nflog"
   conntrack: "stateful"
-  missing: "withhold"
+  missing: "lazy"
   rollback_delay: "30"
   always_ifname: "ppp"
 
