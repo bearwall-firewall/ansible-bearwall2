@@ -71,6 +71,7 @@
       deb [signed-by=/usr/share/keyrings/bearwall2.gpg]
       https://dl.cloudsmith.io/public/bearwall/bearwall2/deb/{{ ansible_distribution | lower }}
       {{ ansible_distribution_release }} main
+    filename: bearwall2
     state: present
 
 - name: Install packages
