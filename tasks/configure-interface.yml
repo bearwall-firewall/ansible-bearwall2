@@ -1,7 +1,7 @@
 ---
 
 - name: Configure bearwall interface {{ item.name }} as class {{ item.class }}
-  file:
+  ansible.builtin.file:
     src: "/etc/bearwall2/classes.d/{{ item.class }}"
     dest: "/etc/bearwall2/interfaces.d/{{ item.name }}.if"
     state: link
@@ -9,8 +9,11 @@
   notify: apply bearwall2
 
 - name: Configure bearwall interface {{ item.name }}
-  template:
+  ansible.builtin.template:
     src: if
     dest: "/etc/bearwall2/interfaces.d/{{ item.name }}.if"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
   when: "'class' not in item"
   notify: apply bearwall2

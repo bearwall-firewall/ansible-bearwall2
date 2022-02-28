@@ -1,17 +1,18 @@
 ---
 
 - name: Get dpkg host architecture
-  command: dpkg --print-architecture
+  ansible.builtin.command:
+    cmd: dpkg --print-architecture
   changed_when: false
   register: get_dpkg_host_architecture
 
 - name: Set dpkg host architecture fact
-  set_fact:
+  ansible.builtin.set_fact:
     dpkg_host_architecture: "{{ get_dpkg_host_architecture.stdout }}"
   when: get_dpkg_host_architecture.rc == 0
 
 - name: Enable debian backports on debian buster
-  apt_repository:
+  ansible.builtin.apt_repository:
     filename: "debian-backports"
     repo: "deb {{ debian_mirror }} {{ debian_backports_components }}"
     update_cache: yes
@@ -21,8 +22,8 @@
     - ansible_distribution == "Debian"
     - ansible_distribution_release == "buster"
 
-- name: Backport kernel and nftables on debian buster
-  apt:
+- name: Backport kernel and nftables on debian buster  # noqa package-latest
+  ansible.builtin.apt:
     name:
       - linux-image-{{ dpkg_host_architecture }}
       - nftables
@@ -34,35 +35,35 @@
     - ansible_distribution_release == "buster"
 
 - name: Remove bearwall2 bintray repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb https://dl.bintray.com/bearwall/bearwall2 {{ ansible_distribution_release }} main"
     state: absent
 
 - name: Remove bearwall2 bintray GPG signing key
-  apt_key:
+  ansible.builtin.apt_key:
     id: "6ABA09963E518866C29FA6C10F0921E4A2D0D6AE"
     state: absent
 
 - name: Remove bearwall2 repository entry without signed-by
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "deb https://dl.cloudsmith.io/public/bearwall/bearwall2/deb/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
     state: absent
 
 - name: Remove bearwall2 cloudsmith GPG signing key from default keyring
-  apt_key:
+  ansible.builtin.apt_key:
     id: "{{ bearwall2_apt_key_fingerprint }}"
     keyring: "/etc/apt/trusted.gpg"
     state: absent
 
 - name: Import bearwall2 cloudsmith GPG signing key
-  apt_key:
+  ansible.builtin.apt_key:
     id: "{{ bearwall2_apt_key_fingerprint }}"
     url: "https://dl.cloudsmith.io/public/bearwall/bearwall2/gpg.26EA35E7A5ED1FFE.key"
     keyring: "/usr/share/keyrings/bearwall2.gpg"
     state: present
 
 - name: Add bearwall2 cloudsmith repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: >-
       deb [signed-by=/usr/share/keyrings/bearwall2.gpg]
       https://dl.cloudsmith.io/public/bearwall/bearwall2/deb/{{ ansible_distribution | lower }}
@@ -71,48 +72,57 @@
     state: present
 
 - name: Install packages
-  apt:
+  ansible.builtin.apt:
     name:
       - bearwall2
       - ulogd2
     state: present
 
 - name: Gather package versions
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
 
 - name: Check kernel version
-  fail:
-      msg: "Warning: kernel version should be >= 5.2 for nat to work, detected version: {{ ansible_kernel }}"
-  ignore_errors: yes
+  ansible.builtin.fail:
+    msg: "Warning: kernel version should be >= 5.2 for nat to work, detected version: {{ ansible_kernel }}"
+  failed_when: false
   when: ansible_kernel is version('5.2', '<')
 
 - name: Check nftables version
-  fail:
-      msg: "Warning: nftables version should be >= 0.9.1 for nat to work, detected version: {{ ansible_facts.packages['nftables'][0]['version'] }}"
-  ignore_errors: yes
+  ansible.builtin.fail:
+    msg: "Warning: nftables version should be >= 0.9.1 for nat to work, detected version: {{ ansible_facts.packages['nftables'][0]['version'] }}"
+  failed_when: false
   when: ansible_facts.packages['nftables'][0]['version'] is version('0.9.1', '<')
 
 - name: Configure ulogd2
-  template:
+  ansible.builtin.template:
     src: "ulogd.conf"
     dest: "/etc/ulogd.conf"
+    owner: root
+    group: root
+    mode: u=rw,g=,o=
   notify: restart ulogd2
 
 - name: Configure bearwall2
-  template:
+  ansible.builtin.template:
     src: "bearwall2.conf"
     dest: "/etc/bearwall2/bearwall2.conf"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
   notify: apply bearwall2
 
 - name: Configure bearwall2 rulesets
-  include_tasks: configure-ruleset.yml
-  with_items: "{{ bearwall2_rulesets }}"
+  ansible.builtin.include_tasks:
+    file: configure-ruleset.yml
+  loop: "{{ bearwall2_rulesets }}"
 
 - name: Configure bearwall2 classes
-  include_tasks: configure-class.yml
-  with_items: "{{ bearwall2_classes }}"
+  ansible.builtin.include_tasks:
+    file: configure-class.yml
+  loop: "{{ bearwall2_classes }}"
 
 - name: Configure bearwall2 interfaces
-  include_tasks: configure-interface.yml
-  with_items: "{{ bearwall2_interfaces }}"
+  ansible.builtin.include_tasks:
+    file: configure-interface.yml
+  loop: "{{ bearwall2_interfaces }}"
