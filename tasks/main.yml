@@ -1,9 +1,5 @@
 ---
 
-- name: Gather package versions
-  package_facts:
-    manager: auto
-
 - name: Get dpkg host architecture
   command: dpkg --print-architecture
   changed_when: false
@@ -64,6 +60,10 @@
       - bearwall2
       - ulogd2
     state: present
+
+- name: Gather package versions
+  package_facts:
+    manager: auto
 
 - name: Check kernel version
   fail:
