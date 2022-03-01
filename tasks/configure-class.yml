@@ -1,7 +1,10 @@
 ---
 
 - name: Configure bearwall class {{ item.name }}
-  template:
+  ansible.builtin.template:
     src: if
     dest: "/etc/bearwall2/classes.d/{{ item.name }}"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
   notify: apply bearwall2
