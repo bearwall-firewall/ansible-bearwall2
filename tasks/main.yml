@@ -101,6 +101,8 @@
     owner: root
     group: root
     mode: u=rw,g=,o=
+  vars:
+    ulogd2_version: "{{ ansible_facts.packages['ulogd2'][0]['version'] }}"
   notify: restart ulogd2
 
 - name: Configure bearwall2
