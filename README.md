@@ -78,3 +78,18 @@ Available variables are listed below, see `defaults/main.yml` for default values
                  forwarding: 0
                  log_martians: 0
                  send_redirects: 0
+
+## Installation
+
+This role can either be installed manually with the ansible-galaxy CLI tool:
+
+    ansible-galaxy install git+https://github.com/bearwall-firewall/ansible-bearwall2,master,bearwall2
+
+Or, by adding the following to `requirements.yml`:
+
+    - name: bearwall2
+      src: https://github.com/bearwall-firewall/ansible-bearwall2
+
+Roles listed in `requirements.yml` can be installed with the following ansible-galaxy command:
+
+    ansible-galaxy install -r requirements.yml

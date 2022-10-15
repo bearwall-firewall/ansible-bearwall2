@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include bearwall2"
+      ansible.builtin.include_role:
+        name: "bearwall2"
+      vars:
+        bearwall2_dry_run: true

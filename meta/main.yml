@@ -1,11 +1,12 @@
+---
 galaxy_info:
   role_name: bearwall2
   author: Bearwall Maintainers
   description: Ansible role for installing and configuring Bearwall2.
 
-  license: Apache-2
+  license: Apache-2.0
 
-  min_ansible_version: 2.10
+  min_ansible_version: "2.10"
 
   platforms:
     - name: Debian
@@ -23,3 +24,5 @@ galaxy_info:
     - bearwall
     - firewall
     - nftables
+
+dependencies: []
