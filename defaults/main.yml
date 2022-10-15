@@ -10,7 +10,7 @@ bearwall2_options:
   conntrack: "stateful"
   missing: "lazy"
   rollback_delay: "30"
-  always_ifname: "ppp"
+  always_ifname: "ppp,tailscale0"
 
 bearwall2_enable_backports: false
 bearwall2_backport_kernel_nftables: false
