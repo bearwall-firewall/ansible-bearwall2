@@ -118,13 +118,19 @@
   ansible.builtin.include_tasks:
     file: configure-ruleset.yml
   loop: "{{ bearwall2_rulesets }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Configure bearwall2 classes
   ansible.builtin.include_tasks:
     file: configure-class.yml
   loop: "{{ bearwall2_classes }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Configure bearwall2 interfaces
   ansible.builtin.include_tasks:
     file: configure-interface.yml
   loop: "{{ bearwall2_interfaces }}"
+  loop_control:
+    label: "{{ item.name }}"
