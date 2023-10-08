@@ -18,9 +18,9 @@ Available variables are listed below, see `defaults/main.yml` for default values
 
         bearwall2_rulesets:
           - name: martians
-            policies:
-              - policy_log ip saddr {192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12} reject
-              - policy_log ip daddr {192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12} reject
+            policies: |
+              policy_log ip saddr {192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12} reject
+              policy_log ip daddr {192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12} reject
 
   * Bearwall2 classes can be defined by adding them to `bearwall2_classes`:
 
