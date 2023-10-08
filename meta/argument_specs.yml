@@ -1,0 +1,144 @@
+---
+argument_specs:
+  main:
+    short_description: Ansible role for installing and configuring Bearwall2.
+    options:
+      bearwall2_apt_key_fingerprint:
+        description: GPG key fingerprint for apt repo
+        type: str
+        default: C704B6DE77346EBAE0D229DA26EA35E7A5ED1FFE
+
+      bearwall2_enable_backports:
+        description: If true, enable debian backports repo for apt
+        type: bool
+        default: false
+
+      bearwall2_backport_kernel_nftables:
+        description: If true, install kernel and nftables from debian backports
+        type: bool
+        default: false
+
+      debian_mirror:
+        description: Apt mirror to use for debian backports repo
+        type: str
+        default: "https://deb.debian.org/debian/"
+
+      debian_backports_components:
+        description: Components to enable when adding debian backports repo
+        type: str
+        default: "{{ ansible_distribution_release }}-backports main contrib non-free"
+
+      bearwall2_dry_run:
+        description: If enabled, don't reload bearwall2 when config has changed
+        type: bool
+        default: false
+
+      bearwall2_options:
+        description: Bearwall2 configuration options
+        type: dict
+        options:
+          logging:
+            description: Where should firewall rule matches be logged to?
+            type: str
+            choices:
+              - syslog
+              - nflog
+              - none
+            default: nflog
+          conntrack:
+            description: |
+              Should bearwall act as a stateful or stateless firewall with
+              packets being forwarded through the firewall
+            type: str
+            choices:
+              - stateful
+              - local
+              - stateless
+            default: stateful
+          missing:
+            description: |
+              What should bearwall do when it comes across an interface that it has a
+              firewall definition for, but the interface does not exist on the host
+            type: str
+            choices:
+              - ifname
+              - lazy
+              - withhold
+              - error
+              - ignore
+            default: lazy
+          rollback_delay:
+            description: |
+              The number of seconds bearwall should wait before automatically rolling back
+              firewall policy after the try command has been run
+            type: int
+            default: 30
+          always_ifname:
+            description: |
+              Comma-separated list of interfaces that should always be created and referenced by
+              ifname instead of ifindex, irrespective of what the missing interface configuration
+              option is set to
+            type: str
+            default: "ppp,tailscale0"
+        default:
+          logging: "nflog"
+          conntrack: "stateful"
+          missing: "lazy"
+          rollback_delay: "30"
+          always_ifname: "ppp,tailscale0"
+
+      bearwall2_rulesets:
+        description: List of bearwall2 firewall rulesets
+        type: list
+        elements: dict
+        options:
+          name:
+            description: Name of ruleset
+            type: str
+            required: true
+          policies:
+            description: Bearwall2 policies
+            type: str
+            required: true
+
+      bearwall2_classes:
+        description: List of bearwall2 firewall classes
+        type: list
+        elements: dict
+        required_one_of:
+          - {policies, if_features}
+        options:
+          name:
+            description: Name of class
+            type: str
+            required: true
+          policies:
+            description: Bearwall2 policies
+            type: str
+          if_features:
+            description: Interface features
+            type: dict
+
+      bearwall2_interfaces:
+        description: List of interfaces to firewall
+        type: list
+        elements: dict
+        required_one_of:
+          - {class, policies, if_features}
+        mutually_exclusive:
+          - {class, policies}
+          - {class, if_features}
+        options:
+          name:
+            description: Name of interface
+            type: str
+            required: true
+          class:
+            description: Bearwall2 class
+            type: str
+          policies:
+            description: Bearwall2 policies
+            type: str
+          if_features:
+            description: Interface features
+            type: dict
