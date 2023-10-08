@@ -6,6 +6,7 @@ bearwall2_classes: []
 bearwall2_interfaces: []
 
 bearwall2_options:
+  counters: "false"
   logging: "nflog"
   conntrack: "stateful"
   missing: "lazy"

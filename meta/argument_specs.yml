@@ -37,6 +37,10 @@ argument_specs:
         description: Bearwall2 configuration options
         type: dict
         options:
+          counters:
+            description: If true, create packet and byte counters for each rule
+            type: bool
+            default: false
           logging:
             description: Where should firewall rule matches be logged to?
             type: str
@@ -81,6 +85,7 @@ argument_specs:
             type: str
             default: "ppp,tailscale0"
         default:
+          counters: "false"
           logging: "nflog"
           conntrack: "stateful"
           missing: "lazy"
