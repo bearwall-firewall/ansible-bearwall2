@@ -4,6 +4,7 @@
   ansible.builtin.file:
     src: "/etc/bearwall2/classes.d/{{ item.class }}"
     dest: "/etc/bearwall2/interfaces.d/{{ item.name }}.if"
+    force: true
     state: link
   when: "'class' in item"
   notify: apply bearwall2
