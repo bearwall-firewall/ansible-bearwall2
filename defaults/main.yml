@@ -6,6 +6,7 @@ bearwall2_classes: []
 bearwall2_interfaces: []
 
 bearwall2_options:
+  nftables_exclusive: "true"
   counters: "false"
   logging: "nflog"
   conntrack: "stateful"

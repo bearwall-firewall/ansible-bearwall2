@@ -37,6 +37,12 @@ argument_specs:
         description: Bearwall2 configuration options
         type: dict
         options:
+          nftables_exclusive:
+            description: |
+              If true, bearwall will delete nftables tables and rules
+              created by other applications, if false it won't
+            type: bool
+            default: true
           counters:
             description: If true, create packet and byte counters for each rule
             type: bool
