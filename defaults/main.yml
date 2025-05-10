@@ -1,5 +1,8 @@
 ---
-bearwall2_apt_key_fingerprint: "C704B6DE77346EBAE0D229DA26EA35E7A5ED1FFE"
+bearwall2_apt_repo_url: "https://dl.cloudsmith.io/public/bearwall/bearwall2/deb/debian"
+bearwall2_apt_repo_suite: "any-version"
+bearwall2_apt_repo_component: "main"
+bearwall2_apt_repo_gpg_key: "https://dl.cloudsmith.io/public/bearwall/bearwall2/gpg.key"
 
 bearwall2_rulesets: []
 bearwall2_classes: []

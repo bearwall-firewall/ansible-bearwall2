@@ -34,48 +34,35 @@
     - ansible_distribution == "Debian"
     - ansible_distribution_release == "buster"
 
-- name: Remove bearwall2 bintray repository
-  ansible.builtin.apt_repository:
-    repo: "deb https://dl.bintray.com/bearwall/bearwall2 {{ ansible_distribution_release }} main"
-    state: absent
+- name: Install dependencies
+  ansible.builtin.apt:
+    pkg:
+      - "python3-debian"
 
-- name: Remove bearwall2 bintray GPG signing key
-  ansible.builtin.apt_key:
-    id: "6ABA09963E518866C29FA6C10F0921E4A2D0D6AE"
+- name: Remove old bearwall2 apt configuration
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: absent
+  loop:
+    - "/etc/apt/sources.list.d/bearwall2.list"
+    - "/usr/share/keyrings/bearwall2.gpg"
 
-- name: Remove bearwall2 repository entry without signed-by
-  ansible.builtin.apt_repository:
-    repo: "deb https://dl.cloudsmith.io/public/bearwall/bearwall2/deb/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
-    state: absent
-
-- name: Remove bearwall2 cloudsmith GPG signing key from default keyring
-  ansible.builtin.apt_key:
-    id: "{{ bearwall2_apt_key_fingerprint }}"
-    keyring: "/etc/apt/trusted.gpg"
-    state: absent
-
-- name: Import bearwall2 cloudsmith GPG signing key
-  ansible.builtin.apt_key:
-    id: "{{ bearwall2_apt_key_fingerprint }}"
-    url: "https://dl.cloudsmith.io/public/bearwall/bearwall2/gpg.26EA35E7A5ED1FFE.key"
-    keyring: "/usr/share/keyrings/bearwall2.gpg"
+- name: Add bearwall2 apt repository
+  ansible.builtin.deb822_repository:
+    name: bearwall2
+    uris: "{{ bearwall2_apt_repo_url }}"
+    suites: "{{ bearwall2_apt_repo_suite }}"
+    components: "{{ bearwall2_apt_repo_component }}"
+    signed_by: "{{ bearwall2_apt_repo_gpg_key }}"
     state: present
-
-- name: Add bearwall2 cloudsmith repository
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb [signed-by=/usr/share/keyrings/bearwall2.gpg]
-      https://dl.cloudsmith.io/public/bearwall/bearwall2/deb/{{ ansible_distribution | lower }}
-      {{ ansible_distribution_release }} main
-    filename: bearwall2
-    state: present
+  register: _apt_repo
 
 - name: Install packages
   ansible.builtin.apt:
     name:
       - bearwall2
       - ulogd2
+    update_cache: "{{ true if _apt_repo is changed else false }}"
     state: present
 
 - name: Gather package versions

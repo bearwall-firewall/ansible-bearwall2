@@ -6,19 +6,20 @@ galaxy_info:
 
   license: Apache-2.0
 
-  min_ansible_version: "2.10"
+  min_ansible_version: "2.15"
 
   platforms:
     - name: Debian
       versions:
-        - stretch
         - buster
         - bullseye
+        - bookworm
+        - trixie
     - name: Ubuntu
       versions:
-        - 16.04
-        - 18.04
-        - 20.04
+        - focal
+        - jammy
+        - noble
 
   galaxy_tags:
     - bearwall
