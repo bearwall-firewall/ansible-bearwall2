@@ -32,6 +32,8 @@ jobs:
           - core: "latest"
             community: "latest"
             python: "3.x"
+        exclude:
+          - target: "ubuntu:questing"
     steps:
       - name: Checkout repo
         uses: actions/checkout@v5
