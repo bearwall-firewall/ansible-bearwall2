@@ -22,4 +22,4 @@ bearwall2_backport_kernel_nftables: false
 bearwall2_dry_run: false
 
 debian_mirror: "https://deb.debian.org/debian/"
-debian_backports_components: "{{ ansible_distribution_release }}-backports main contrib non-free"
+debian_backports_components: "{{ ansible_facts.distribution_release }}-backports main contrib non-free"

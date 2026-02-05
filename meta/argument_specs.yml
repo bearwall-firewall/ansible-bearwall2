@@ -45,7 +45,7 @@ argument_specs:
       debian_backports_components:
         description: Components to enable when adding debian backports repo
         type: str
-        default: "{{ ansible_distribution_release }}-backports main contrib non-free"
+        default: "{{ ansible_facts.distribution_release }}-backports main contrib non-free"
 
       bearwall2_dry_run:
         description: If enabled, don't reload bearwall2 when config has changed

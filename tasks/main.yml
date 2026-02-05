@@ -19,20 +19,20 @@
     state: present
   when:
     - bearwall2_enable_backports
-    - ansible_distribution == "Debian"
-    - ansible_distribution_release == "buster"
+    - ansible_facts.distribution == "Debian"
+    - ansible_facts.distribution_release == "buster"
 
-- name: Backport kernel and nftables on debian buster  # noqa package-latest
+- name: Backport kernel and nftables on debian buster # noqa package-latest
   ansible.builtin.apt:
     name:
       - linux-image-{{ dpkg_host_architecture }}
       - nftables
-    default_release: "{{ ansible_distribution_release }}-backports"
+    default_release: "{{ ansible_facts.distribution_release }}-backports"
     state: latest
   when:
     - bearwall2_backport_kernel_nftables
-    - ansible_distribution == "Debian"
-    - ansible_distribution_release == "buster"
+    - ansible_facts.distribution == "Debian"
+    - ansible_facts.distribution_release == "buster"
 
 - name: Install dependencies
   ansible.builtin.apt:
@@ -71,9 +71,9 @@
 
 - name: Check kernel version
   ansible.builtin.fail:
-    msg: "Warning: kernel version should be >= 5.2 for nat to work, detected version: {{ ansible_kernel }}"
+    msg: "Warning: kernel version should be >= 5.2 for nat to work, detected version: {{ ansible_facts.kernel }}"
   failed_when: false
-  when: ansible_kernel is version('5.2', '<')
+  when: ansible_facts.kernel is version('5.2', '<')
 
 - name: Check nftables version
   ansible.builtin.fail:
