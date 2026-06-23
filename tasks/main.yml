@@ -12,11 +12,13 @@
   when: get_dpkg_host_architecture.rc == 0
 
 - name: Enable debian backports on debian buster
-  ansible.builtin.apt_repository:
-    filename: "debian-backports"
-    repo: "deb {{ debian_mirror }} {{ debian_backports_components }}"
-    update_cache: yes
-    state: present
+  ansible.builtin.template:
+    src: "debian-backports.list"
+    dest: "/etc/apt/sources.list.d/debian-backports.list"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  register: _debian_backports_list
   when:
     - bearwall2_enable_backports
     - ansible_facts.distribution == "Debian"
@@ -28,6 +30,7 @@
       - linux-image-{{ dpkg_host_architecture }}
       - nftables
     default_release: "{{ ansible_facts.distribution_release }}-backports"
+    update_cache: "{{ true if _debian_backports_list is changed else false }}"
     state: latest
   when:
     - bearwall2_backport_kernel_nftables
