@@ -27,26 +27,6 @@ argument_specs:
         type: str
         default: "https://dl.cloudsmith.io/public/bearwall/bearwall2/gpg.key"
 
-      bearwall2_enable_backports:
-        description: If true, enable debian backports repo for apt
-        type: bool
-        default: false
-
-      bearwall2_backport_kernel_nftables:
-        description: If true, install kernel and nftables from debian backports
-        type: bool
-        default: false
-
-      debian_mirror:
-        description: Apt mirror to use for debian backports repo
-        type: str
-        default: "https://deb.debian.org/debian/"
-
-      debian_backports_components:
-        description: Components to enable when adding debian backports repo
-        type: str
-        default: "{{ ansible_facts.distribution_release }}-backports main contrib non-free"
-
       bearwall2_dry_run:
         description: If enabled, don't reload bearwall2 when config has changed
         type: bool
