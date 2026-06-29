@@ -11,29 +11,6 @@
     dpkg_host_architecture: "{{ get_dpkg_host_architecture.stdout }}"
   when: get_dpkg_host_architecture.rc == 0
 
-- name: Enable debian backports on debian buster
-  ansible.builtin.apt_repository:
-    filename: "debian-backports"
-    repo: "deb {{ debian_mirror }} {{ debian_backports_components }}"
-    update_cache: yes
-    state: present
-  when:
-    - bearwall2_enable_backports
-    - ansible_facts.distribution == "Debian"
-    - ansible_facts.distribution_release == "buster"
-
-- name: Backport kernel and nftables on debian buster # noqa package-latest
-  ansible.builtin.apt:
-    name:
-      - linux-image-{{ dpkg_host_architecture }}
-      - nftables
-    default_release: "{{ ansible_facts.distribution_release }}-backports"
-    state: latest
-  when:
-    - bearwall2_backport_kernel_nftables
-    - ansible_facts.distribution == "Debian"
-    - ansible_facts.distribution_release == "buster"
-
 - name: Install dependencies
   ansible.builtin.apt:
     pkg:

@@ -6,14 +6,6 @@ An ansible role that installs [bearwall2](https://bearwall.org) on Debian/Ubuntu
 
 Available variables are listed below, see `defaults/main.yml` for default values.
 
-  * For NAT to work properly with bearwall2 a recent version of the linux kernel
-    and nftables is required. Setting the below variables to true will cause
-    the right versions to be installed on Debian Buster. On Ubuntu please use
-    version 20.04+.
-
-        bearwall2_enable_backports: true
-        bearwall2_backport_kernel_nftables: true
-
   * Bearwall2 rulesets can be defined by adding them to `bearwall2_rulesets`:
 
         bearwall2_rulesets:
